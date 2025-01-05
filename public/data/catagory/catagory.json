@@ -1,0 +1,18 @@
+[
+    {
+        "categoryId": "01",
+        "iconPost" : "faUmbrellaBeach",
+        "categoryPostname": "Packages" 
+    },
+    {
+        "categoryId": "02",
+        "iconPost" : "faPassport",
+        "categoryPostname": "Visa" 
+    },
+    {
+        "categoryId": "03",
+        "iconPost" : "faSuitcaseRolling",
+        "categoryPostname": "Travel" 
+    }
+
+]
