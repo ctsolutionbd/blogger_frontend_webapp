@@ -18,6 +18,7 @@ import Registration from './pages/Registration';
 
 // Categories
 
+
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -40,7 +41,7 @@ function App() {
           <Route path="/" element={<Home />} />
 
           {/* Blog-related pages */}
-          <Route path="/:archiveblogs" element={<Archiveblogs />} />
+          <Route path="/all-posts:typePost" element={<Archiveblogs />} />
 
           {/* User-related pages */}
           <Route path="/login" element={<Login />} />

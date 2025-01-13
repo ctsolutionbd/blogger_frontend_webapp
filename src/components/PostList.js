@@ -9,7 +9,7 @@ const PostList = () => {
   const [error, setError] = useState(null);
 
   const fetchData = useCallback(async () => {
-    let url = "/data/blog/blogposts.json"; // URL for the JSON data
+    let url = "/data/blog/posts.json"; // URL for the JSON data
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -107,16 +107,7 @@ const PostList = () => {
           </div>
         ))}
       </div>
-
-      {blogs.length > 4 && (
-        <div className="text-center mt-6">
-          <Link to="/new-blogs">
-            <button className="bg-indigo-600 hover:bg-blue-700 glass text-white font-bold py-2 px-4 rounded">
-              View More
-            </button>
-          </Link>
-        </div>
-      )}
+      {blogs.length > 4 && ("")}
     </div>
   );
 };

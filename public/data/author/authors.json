@@ -1,0 +1,14 @@
+[
+    {   
+        "authId":"01",
+        "profileImage": "./assets/profile/Rahat.jpg",
+        "authorName": "Risul Islam Rahat",
+        "bio" : "DevOps Enginner"
+    },
+    {   
+        "authId":"02",
+        "profileImage": "./assets/profile/Sakib.jpg",
+        "authorName": "Sakib Chowdury",
+        "bio" : "Technical Enginner"
+    }
+]

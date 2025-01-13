@@ -13,9 +13,7 @@ const Category = () => {
     const fetchBlogs = async () => {
       try {
         const responses = await Promise.all([
-          fetch("/data/blog/trendingblog.json"),
-          fetch("/data/blog/topblog.json"),
-          fetch("/data/blog/newblog.json")
+          fetch("/data/catagory/category.json"),
         ]);
 
         const [trendingBlogs, topBlogs, newBlogs] = await Promise.all(

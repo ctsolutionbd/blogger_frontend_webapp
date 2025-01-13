@@ -41,7 +41,7 @@
     {
       "idPost": 4,
       "typePost": "Trending",
-      "titlePost": "New Blog 4",
+      "titlePost": "Trending Blog 4",
       "iconPost" : "",
       "categoryPostname": "Packages",
       "descriptionPost": "This is a brief description of the top blog 4.",
@@ -66,8 +66,8 @@
     },
     {
       "idPost": 6,
-      "typePost": "New",
-      "titlePost": "New Blog 6",
+      "typePost": "Trending",
+      "titlePost": "Trending Blog 6",
       "iconPost" : "",
       "categoryPostname": "Visa",
       "descriptionPost": "This is a brief description of the top blog 4.",

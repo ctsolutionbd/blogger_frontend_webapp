@@ -8,7 +8,7 @@ const PostDetails = () => {
   const [error, setError] = useState(null);
 
   const fetchData = useCallback(async () => {
-    let url = "/data/blog/blogposts.json"; // URL for the blog posts data
+    let url = "/data/blog/posts.json"; // URL for the blog posts data
     try {
       const response = await fetch(url);
       if (!response.ok) {

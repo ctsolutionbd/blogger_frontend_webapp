@@ -1,109 +1,81 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-// import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom"; // Import useParams to get the URL param
+import PostList from "../components/PostList";
+import { combinedFilter } from "../utils/filter"; // Reuse the combinedFilter utility
 
 
 const Archiveblogs = () => {
+  const { typePost } = useParams(); // Get the post type from the URL (Trending, New, Top)
   const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [categoryFilter, setCategoryFilter] = useState("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/data/blog/.json");
-        if (!response.ok) {
-          throw new Error("Failed to fetch the blog data.");
-        }
-        const data = await response.json();
-        setBlogs(data);
-      } catch (error) {
-        console.error("Error fetching blogs:", error);
-        setError(error.message);
-      } finally {
-        setLoading(false);
+  // Fetch blog data
+  const fetchData = useCallback(async () => {
+    let url = "/data/blog/posts.json"; // Adjust this path as necessary
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch the blog data.");
       }
-    };
-
-    fetchData();
+      const data = await response.json();
+      setBlogs(data); // Save fetched blog data to state
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    fetchData(); // Fetch data when component loads
+  }, [fetchData]);
 
-  if (error) {
-    return (
-      <div className="text-red-600 text-center py-10">
-        <p>There was an error loading the blogs.</p>
-        <p>{error}</p>
-      </div>
-    );
-  }
-  const limitedBlogs = blogs.slice(0, 8);
-
-  const truncateDescription = (description) => {
-    const words = description.split(" ");
-    return words.length > 10 ? words.slice(0, 10).join(" ") + "..." : description;
-  };
+  // Filtering blogs based on the typePost from URL (Trending, New, Top)
+  const filteredBlogs = combinedFilter(blogs, {
+    typePost: typePost, // Filter by the typePost from URL param
+    categoryPostname: categoryFilter, // You can also allow category filtering on this page
+  });
 
   return (
-    //   {/* If i click trending blog header title show Trending Blog or i click New blog the header title show New Blogs */}
-    //               <h2 className="p-4 font-extrabold items-center w-28">{archivetitle} Blogs</h2>
-    <div className="container mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {limitedBlogs.map((blog) => (
-          <div key={blog.idPost} className="w-full">
-            <div className="card bg-opacity-70 bg-slate-50 shadow-xl h-full">
-              <figure className="h-48 w-auto">
-                <img
-                  src={blog.imgUrl}
-                  alt={blog.title}
-                  className="w-full h-full object-cover"
-                />
-              </figure>
-              <div className="card-body">
-                {/* Link to post details using blog title */}
-                <Link to={`/post/${encodeURIComponent(blog.title)}`} className="text-violet-700 font-bold hover:underline">
-                  <h3 className="text-lg text-indigo-700 card-title font-semibold">{blog.title}</h3>
-                </Link>
-                <div className="card-actions justify-start">
-                <Link to={`/category/${encodeURIComponent(blog.category)}`}>
-                  <button className="btn glass bg-indigo-500 btn-sm text-white">{blog.category}</button>
-                </Link>
-                </div>
-                <p className="text-indigo-600">{truncateDescription(blog.description)}</p>
-
-                <div className="card-actions items-center justify-between">
-                  <Link to={`/${blog.author}`} className="text-violet-700 font-thin hover:underline">{blog.author}</Link>
-                  <div className="flex items-center text-violet-500 font-thin text-sm gap-2">
-                    <p>{blog.date}</p>
-                    <FontAwesomeIcon icon={faClock} />
-                    <p>{blog.time}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div className="p-7 container mx-auto">
+      {/* Filter Controls */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          {/* Category Filter */}
+          <div>
+            <label className="block mb-1 font-semibold">Filter by Category:</label>
+            <select
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="p-2 border border-gray-300 rounded-lg"
+              value={categoryFilter}
+            >
+              <option value="">All Categories</option>
+              <option value="Travel">Travel</option>
+              <option value="Visa">Visa</option>
+              <option value="Packages">Packages</option>
+            </select>
           </div>
-        ))}
+        </div>
+
+        {/* Reset Filters Button */}
+        <button
+          onClick={() => {
+            setCategoryFilter("");
+          }}
+          className="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg mt-4 sm:mt-0"
+        >
+          Reset Filters
+        </button>
       </div>
 
-      {blogs.length > 4 && (
-        <div className="text-center mt-6">
-          <Link to="/new-blogs">
-            <button className="hidden bg-indigo-600 hover:bg-blue-700 glass text-white font-bold py-2 px-4 rounded">
-              View More
-            </button>
-          </Link>
+      {/* Displaying filtered blogs */}
+      {filteredBlogs.length === 0 ? (
+        <p>No posts found for the selected filters.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredBlogs.map((blog) => (
+            <PostList key={blog.idPost} blog={blog} />
+          ))}
         </div>
       )}
-    
     </div>
   );
 };
